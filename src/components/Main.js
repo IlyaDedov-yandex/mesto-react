@@ -40,7 +40,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
             <section className="elements">
                 {isLoading ? <Spinner /> :
                     <ul className="elements__list">
-                        {cards.map((card) => <Card card={card} onCardClick={onCardClick} />)}
+                        {cards.map((card) => <Card card={card} key={card._id} onCardClick={onCardClick} />)}
                     </ul>
                 }
             </section>
