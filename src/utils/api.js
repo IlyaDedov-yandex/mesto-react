@@ -17,7 +17,7 @@ class Api {
             .then(this._checkResponse)
     }
 
-    editProfileInfo(data) {
+    setUserInfo(data) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'PATCH',
             headers: this._headers,
@@ -40,21 +40,24 @@ class Api {
         })
             .then(this._checkResponse)
     }
-    likeCard(cardId) {
+    _likeCard(cardId) {
         return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
             method: 'PUT',
             headers: this._headers,
         })
             .then(this._checkResponse)
     }
-    dislikeCard(cardId) {
+    _dislikeCard(cardId) {
         return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
             method: 'DELETE',
             headers: this._headers,
         })
             .then(this._checkResponse)
     }
-    editAvatar(link) {
+    changeLikeCardStatus(cardId, status) {
+        return status ? this._likeCard(cardId) : this._dislikeCard(cardId);
+    }
+    setUserAvatar(link) {
         return fetch(`${this._baseUrl}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._headers,
