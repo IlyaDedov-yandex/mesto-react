@@ -22,22 +22,15 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   useEffect(() => {
-    api.getInitialInfo()
-      .then(info => {
+    Promise.all([api.getInitialInfo(), api.getInitialCards()])
+      .then(([info, cardsArr]) => {
         setCurrentUser(info);
-      })
-      .catch(err => console.log(err));
-  }, []);
-  useEffect(() => {
-    api.getInitialCards()
-      .then((cardsArr) => {
         setCards(cardsArr);
         setIsLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch(err => console.log(err));
   }, []);
+
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
@@ -50,6 +43,7 @@ function App() {
     api.deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
+        closeAllPopups();
       })
       .catch(err => console.log(err));
   }
@@ -78,18 +72,25 @@ function App() {
   }
   function handleUpdateUser(info) {
     api.setUserInfo(info)
-      .then(res => setCurrentUser(res))
+      .then(res => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
       .catch(err => console.log(err));
   }
   function handleUpdateAvatar(link) {
     api.setUserAvatar(link)
-      .then(info => setCurrentUser(info))
+      .then(info => {
+        setCurrentUser(info);
+        closeAllPopups();
+      })
       .catch(err => console.log(err));
   }
   function handleAddPlaceSubmit(card) {
     api.createNewCard(card)
       .then(newCard => {
         setCards([newCard, ...cards]);
+        closeAllPopups();
       })
       .catch(err => console.log(err));
   }
